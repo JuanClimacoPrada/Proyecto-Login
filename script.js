@@ -1,22 +1,27 @@
-// Usuarios predefinidos para la validación
-const validUser = {
-  username: 'admin',
-  password: '12345'
-};
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();  // Prevenir que se envíe el formulario por defecto
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-// Función para validar el login
-document.getElementById('login-form').addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  // Validar usuario y contraseña
-  if (username === validUser.username && password === validUser.password) {
-    alert('¡Inicio de sesión exitoso!');
-    // Redirigir a otra página (por ejemplo: Dashboard)
-    window.location.href = "dashboard.html";
-  } else {
-    document.getElementById('error-message').style.display = 'block';
-  }
+    // Enviar los datos al backend usando fetch (POST)
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirigir a la página principal del hotel
+            window.location.href = '/dashboard';
+        } else {
+            alert('Credenciales incorrectas');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 });
